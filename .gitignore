@@ -1,0 +1,13 @@
+/wordpress/*.txt
+/wordpress/*.html
+/wordpress/wp-admin
+
+/wordpress/wp-content/plugins
+/wordpress/wp-content/uploads
+
+/wordpress/wp-content/*.php
+/wordpress/wp-content/themes/*.php
+/wordpress/wp-content/themes/themeized
+/wordpress/wp-content/uploads
+/wordpress/wp-includes
+/wordpress/*.php
