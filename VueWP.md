@@ -38,3 +38,68 @@
 
 Once done installtion open app folder and run 
 - ```npm run serve```
+
+
+# Add Vue Router to create pages / URL
+- ```npm install vue-router@next --save```
+
+- Create ```@/router/router.js```
+// router.js
+```
+
+// App.vue
+```js
+<template>
+  <div>
+      <router-link to="/">Home Static Link</router-link>
+      <router-link :to="links.home">Home Dynamic Link</router-link>
+      <router-link :to="links.contact">Contact Dynamic Link</router-link>
+      
+      <router-view />
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+  data() {
+    return {
+        "links": {
+          "home": '/',
+          "contact": '/contact'
+        }
+    }
+  },
+  components: {
+    // not now
+  }
+}
+</script>
+```
+
+
+// main.js
+```js
+import { createWebHistory, createRouter } from 'vue-router';
+import HomePage from '../views/frontend/pages/HomePage'
+
+const routes = [
+    {
+        path: '/',
+        name: 'HomePage',
+        component: HomePage
+    },
+    {
+        path: '/contact',
+        name: 'ContactPage',
+        component: HomePage
+    }
+];
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes
+});
+
+export default router;
+```

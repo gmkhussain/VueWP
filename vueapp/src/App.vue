@@ -1,14 +1,26 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+      <router-link to="/">Home Static Link</router-link>
+      <router-link :to="links.home">Home Dynamic Link</router-link>
+      <router-link :to="links.contact">Contact Dynamic Link</router-link>
+      
+      <router-view />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
+  data() {
+    return {
+        "links": {
+          "home": '/',
+          "contact": '/contact'
+        }
+    }
+  },
   components: {
-    HelloWorld
+    // not now
   }
 }
 </script>
