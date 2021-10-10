@@ -172,3 +172,108 @@ export default {
 ```npm install -D sass-loader@10.0.5``` 
 #### ^ SASS / SCSS Loader error
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Layout
+
+
+
+
+// AppLayoutDefault.vue
+```js
+<template>
+  <div id="body-wrapper">
+    <Header />
+      <main id="pageContent">
+        <slot />
+      </main>
+    <Footer />
+  </div>
+</template>
+
+<script>
+import Header from './Header'
+import Footer from './Footer'
+
+export default{
+  name: 'AppLayoutDefault',
+  components: {
+    Header,
+    Footer
+  }
+}
+</script>
+```
+
+
+
+
+
+
+// AppLayout.vue
+```js
+<template>
+  <component :is="layout">
+    <slot />
+  </component>
+</template>
+
+
+<script>
+import AppLayoutDefault from './AppLayoutDefault'
+export default {
+  name: "AppLayout",
+  data: () => ({
+    layout: AppLayoutDefault
+  }),
+  watch: {
+    $route: {
+      immediate: true,
+      async handler(route) {
+        try {
+          const component = await import(`@/views/frontend/layouts/${route.meta.layout}.vue`)
+          this.layout = component?.default || AppLayoutDefault
+        } catch (e) {
+          this.layout = AppLayoutDefault
+        }
+      }
+    }
+  }
+}
+</script>
+```
+
+
+
+// App.vue
+```js
+<template>
+<AppLayout>
+  <router-view />
+</AppLayout>
+</template>
+
+
+<script>
+import AppLayout from './views/frontend/layouts/AppLayout'
+
+export default {
+  name: 'App',
+  components: {
+    // nothing
+    AppLayout
+  }
+}
+</script>
+```

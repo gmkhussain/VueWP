@@ -2,7 +2,7 @@
     <section class="home">
         <div class="container">
             <h1>Home Page</h1>
-        
+
             <div v-for="(p, index) in posts" :key="index">
                 {{p.id}}
                 {{p.title.rendered}}

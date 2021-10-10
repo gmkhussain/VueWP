@@ -1,23 +1,22 @@
 <template>
   <div>
-      <Header />
+    <AppLayout>
       <router-view />
+    </AppLayout>
   </div>
 </template>
 
 <script>
-import Header from './views/frontend/layouts/Header.vue'
+import AppLayout from './views/frontend/layouts/AppLayout'
+
 export default {
   name: 'App',
   components: {
-    Header
+    AppLayout
   },
   data() {
     return {
-        "links": {
-          "home": '/',
-          "contact": '/contact'
-        }
+        "pageData": "App"
     }
   }
 }
