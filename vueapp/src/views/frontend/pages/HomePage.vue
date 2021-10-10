@@ -1,13 +1,15 @@
 <template>
-    <div>
-        <h1>Home Page</h1>
+    <section class="home">
+        <div class="container">
+            <h1>Home Page</h1>
         
-        <div v-for="(p, index) in posts" :key="index">
-            {{p.id}}
-            {{p.title.rendered}}
+            <div v-for="(p, index) in posts" :key="index">
+                {{p.id}}
+                {{p.title.rendered}}
+            </div>
+        
         </div>
-    
-    </div>
+    </section>
 </template>
 
 <script>

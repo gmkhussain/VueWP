@@ -1,16 +1,17 @@
 <template>
   <div>
-      <router-link to="/">Home Static Link</router-link>
-      <router-link :to="links.home">Home Dynamic Link</router-link>
-      <router-link :to="links.contact">Contact Dynamic Link</router-link>
-      
+      <Header />
       <router-view />
   </div>
 </template>
 
 <script>
+import Header from './views/frontend/layouts/Header.vue'
 export default {
   name: 'App',
+  components: {
+    Header
+  },
   data() {
     return {
         "links": {
@@ -18,9 +19,6 @@ export default {
           "contact": '/contact'
         }
     }
-  },
-  components: {
-    // not now
   }
 }
 </script>

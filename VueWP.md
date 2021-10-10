@@ -154,3 +154,21 @@ export default {
 }
 </script>
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Add Bootstrap
+```npm install bootstrap --save```
+```npm install -D sass-loader@10.0.5``` 
+#### ^ SASS / SCSS Loader error
+
