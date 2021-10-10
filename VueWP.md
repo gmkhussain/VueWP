@@ -277,3 +277,101 @@ export default {
 }
 </script>
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Login
+
+### WordPress
+- Add ```JWT Authentication for WP REST API``` Plugin
+
+
+- Add this code in ```.htaccesss```
+```js
+// ..
+RewriteEngine on
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule ^(.*) - [E=HTTP_AUTHORIZATION:%1]
+
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+//..
+```
+
+
+- Add Secret Key in config.php
+```js
+define('JWT_AUTH_SECRET_KEY', 'your-top-secret-key');
+// define('JWT_AUTH_SECRET_KEY', '|EE^ :/?iftqn.R<2H0UlCs9Fu~Mv*mZoH)4%~/~F4eJ2HT6?RJo=S9WcuK|R(rS')
+define('JWT_AUTH_CORS_ENABLE', true);
+```
+
+
+## Test API in Postman
+- Open Postman
+- Add new Request
+- Select Type ```POST```
+- Hit this url: ```your-project.url/wp-json/jwt-auth/v1/token```
+- Click on ```body``` tab
+- click on ```form-data```
+- enter key and values
+  - username: admin
+  - password: admin123
+
+- Check response you will get ```token```
+
+
+
+
+
+
+### VueApp
+// LoginPage.vue
+```js
+<template>
+    <section class="login">
+        <div class="container">
+            Login Page ( without form for now! )
+        </div>
+    </section>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+    name: "LoginPage",
+    data() {
+        return {
+            loginData: {}
+        }
+    },
+    methods: {
+      postAuthFunc() {
+        axios.post(`your-project.url/wp-json/jwt-auth/v1/token`,
+        {
+            username: "admin",
+            password: "admin123"
+         })
+         .then( res=> {
+             console.log( res )
+         }).catch( err=> console.log( err ) )
+      }  
+    },
+    mounted() {
+        this.postAuthFunc()
+    }
+}
+</script>
+```
+

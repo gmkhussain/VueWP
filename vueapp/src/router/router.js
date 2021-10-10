@@ -12,6 +12,11 @@ const routes = [
         path: '/contact',
         name: 'Contact_Page',
         component: ContactPage
+    },
+    {
+        path: '/login',
+        name: 'Login_Page',
+        component: () => import('@/views/frontend/pages/LoginPage.vue')
     }
 ];
 
