@@ -11,3 +11,4 @@
 /wordpress/wp-content/uploads
 /wordpress/wp-includes
 /wordpress/*.php
+/node_modules

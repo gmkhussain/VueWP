@@ -20,6 +20,7 @@ export default {
             posts: []
         }
     },
+
     methods: {
         async getPost() {
             axios.get(`http://localhost/projects/_rnd/VueWP/wordpress/wp-json/wp/v2/posts`)
