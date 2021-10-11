@@ -29,6 +29,7 @@
 
 <script>
 import axios from 'axios'
+import { API_BASE_URL, JWT_AUTH_URL } from '../../../config/config.js'
 
 export default {
     name: "LoginPage",
@@ -51,7 +52,7 @@ export default {
       async postAuthFunc(e) {
            e.preventDefault()
 
-        await axios.post(`http://localhost/projects/_rd/VueWP/wordpress/wp-json/jwt-auth/v1/token`,
+        await axios.post(`${API_BASE_URL}${JWT_AUTH_URL}`,
         {
             username: this.loginData.username,
             password: this.loginData.password

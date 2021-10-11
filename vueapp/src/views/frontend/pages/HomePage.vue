@@ -14,6 +14,7 @@
 
 <script>
 import axios from 'axios'
+import { API_BASE_URL, API_POSTS_URL } from '@/config/config.js'
 
 export default {
     name: "Home_Page",
@@ -25,7 +26,7 @@ export default {
 
     methods: {
         async getPost() {
-            axios.get(`http://localhost/projects/_rnd/VueWP/wordpress/wp-json/wp/v2/posts`)
+            axios.get(`${API_BASE_URL}${API_POSTS_URL}`)
                 .then( res=> {
                     console.log(res)
                     this.posts = res.data   
