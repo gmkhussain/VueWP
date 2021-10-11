@@ -1,25 +1,28 @@
 <template>
     <section class="login">
         <div class="container">
-            <form>
+            <form @submit="postAuthFunc">
                 <div class="form-group">
                     <input 
                         type="text"
                         class="form-control"
-                        v-model="username"
+                        v-model="loginData.username"
                         />
                 </div>
                 <div class="form-group">
                     <input 
                         type="text"
                         class="form-control"
-                        v-model="password"
+                        v-model="loginData.password"
                         />
                 </div>
                 <div class="form-group">
-                    <button class="btn">Login</button>
+                    <button type="submit" class="btn">Login</button>
                 </div>
+                <span v-if="loginFeedback">{{loginFeedback}}</span>
             </form>
+
+            <button @click="logoutFunc">Logout</button>
         </div>
     </section>
 </template>
@@ -31,23 +34,45 @@ export default {
     name: "LoginPage",
     data() {
         return {
-            loginData: {}
+            loginData: {
+                username: 'admin',
+                password: 'admin123'
+            },
+            loggedIn: false,
+            loginFeedback: ''
         }
     },
     methods: {
-      postAuthFunc() {
-        axios.post(`http://localhost/projects/_rnd/VueWP/wordpress/wp-json/jwt-auth/v1/token`,
+      logoutFunc() {
+        localStorage.removeItem("token")
+        console.log("Logout..."+ localStorage.getItem("token"))
+        this.loggedIn = false
+      },
+      async postAuthFunc(e) {
+           e.preventDefault()
+
+        await axios.post(`http://localhost/projects/_rd/VueWP/wordpress/wp-json/jwt-auth/v1/token`,
         {
-            username: "admin",
-            password: "admin123"
-         })
-         .then( res=> {
-             console.log( res )
-         }).catch( err=> console.log( err ) )
-      }  
+            username: this.loginData.username,
+            password: this.loginData.password
+         }
+        ).then( res=> {
+            console.log( "res", res );
+            localStorage.setItem("token", res.data.token)
+            this.loggedIn = true;
+            this.loginFeedback = ''
+            console.log( localStorage.getItem("token") )
+
+        }).catch( err=> {
+            console.log( "err", err );
+            localStorage.setItem("token", '---NO---')
+            console.log( localStorage.getItem("token") )
+            this.loginFeedback = "Incorrect username or password, please try again"
+        } )
+      }
     },
     mounted() {
-        this.postAuthFunc()
+      
     }
 }
 </script>
