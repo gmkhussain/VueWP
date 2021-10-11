@@ -70,9 +70,6 @@ export default {
             this.loginFeedback = "Incorrect username or password, please try again"
         } )
       }
-    },
-    mounted() {
-      
-    }
+    } 
 }
 </script>
