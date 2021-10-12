@@ -29,7 +29,7 @@
 
 <script>
 import axios from 'axios'
-import { API_BASE_URL, JWT_AUTH_URL } from '../../../config/config.js'
+import { JWT_AUTH_URL } from '../../../config/config.js'
 
 export default {
     name: "LoginPage",
@@ -52,7 +52,7 @@ export default {
       async postAuthFunc(e) {
            e.preventDefault()
 
-        await axios.post(`${API_BASE_URL}${JWT_AUTH_URL}`,
+        await axios.post(`process.env.VUE_APP_API_BASE_URL${JWT_AUTH_URL}`,
         {
             username: this.loginData.username,
             password: this.loginData.password

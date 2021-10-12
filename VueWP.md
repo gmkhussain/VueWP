@@ -375,3 +375,196 @@ export default {
 </script>
 ```
 
+
+
+### Login with form inputs
+
+```js
+<template>
+    <section class="login">
+        <div class="container">
+            <form @submit="postAuthFunc">
+                <div class="form-group">
+                    <input 
+                        type="text"
+                        class="form-control"
+                        v-model="loginData.username"
+                        />
+                </div>
+                <div class="form-group">
+                    <input 
+                        type="text"
+                        class="form-control"
+                        v-model="loginData.password"
+                        />
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">Login</button>
+                </div>
+                <span v-if="loginFeedback">{{loginFeedback}}</span>
+            </form>
+
+            <button @click="logoutFunc">Logout</button>
+        </div>
+    </section>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+    name: "LoginPage",
+    data() {
+        return {
+            loginData: {
+                username: 'admin',
+                password: 'admin123'
+            },
+            loggedIn: false,
+            loginFeedback: ''
+        }
+    },
+    methods: {
+      logoutFunc() {
+        localStorage.removeItem("token")
+        console.log("Logout..."+ localStorage.getItem("token"))
+        this.loggedIn = false
+      },
+      async postAuthFunc(e) {
+           e.preventDefault()
+
+        await axios.post(`http://localhost/projects/_rd/VueWP/wordpress/wp-json/jwt-auth/v1/token`,
+        {
+            username: this.loginData.username,
+            password: this.loginData.password
+         }
+        ).then( res=> {
+            console.log( "res", res );
+            localStorage.setItem("token", res.data.token)
+            this.loggedIn = true;
+            this.loginFeedback = ''
+            console.log( localStorage.getItem("token") )
+
+        }).catch( err=> {
+            console.log( "err", err );
+            localStorage.setItem("token", '---NO---')
+            console.log( localStorage.getItem("token") )
+            this.loginFeedback = "Incorrect username or password, please try again"
+        } )
+      }
+    } 
+}
+</script>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Config URLs for API Endpoints
+
+- Create ```configs/config.js```
+
+// config.js
+```js
+export const SITE_BASE_URL = `http://localhost/projects/_rd/VueWP/wordpress`;
+export const API_BASE_URL = `http://localhost/projects/_rd/VueWP/wordpress/wp-json`;
+
+export const JWT_AUTH_URL = `/jwt-auth/v1/token`;
+export const API_POSTS_URL = `/wp/v2/posts`;
+
+export const CONFIG = {
+  headers: {
+    'Accept': 'application/json',
+  },
+};
+```
+
+
+#### Usage
+```js
+// ...
+  axios.get(`${API_BASE_URL}${API_POSTS_URL}`)
+// ...
+```
+- Check HomePage.vue OR LoginPage.vue
+
+
+// HomePage.vue
+```js
+<template>
+    <section class="home">
+        <div class="container">
+            <h1>Home Page</h1>
+
+            <div v-for="(p, index) in posts" :key="index">
+                {{p.id}}
+                {{p.title.rendered}}
+            </div>
+        
+        </div>
+    </section>
+</template>
+
+<script>
+import axios from 'axios'
+import { API_BASE_URL, API_POSTS_URL } from '@/config/config.js'
+
+export default {
+    name: "Home_Page",
+    data() {
+        return {
+            posts: []
+        }
+    },
+    methods: {
+        async getPost() {
+            axios.get(`${API_BASE_URL}${API_POSTS_URL}`)
+                .then( res=> {
+                    console.log(res)
+                    this.posts = res.data   
+                })
+                .catch( err=> console.log(err) )
+        }
+    },
+    mounted(){
+        this.getPost()
+    }
+}
+</script>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+## .ENV config
+```js
+VUE_APP_ROOT_URL = your-project.url/
+VUE_APP_API_BASE_URL = your-project.url/wordpress/wp-json
+```
+
+
+#### Usage
+```js
+axios.get(`process.env.VUE_APP_API_BASE_URL${API_POSTS_URL}`)
+```
