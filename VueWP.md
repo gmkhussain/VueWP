@@ -698,3 +698,116 @@ VUE_APP_API_BASE_URL = your-project.url/wordpress/wp-json
 ```js
 axios.get(`process.env.VUE_APP_API_BASE_URL${API_POSTS_URL}`)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Services for APIs
+
+#### Create `services/services.js`
+```js
+export * from './post/post.js';
+```
+
+#### Create `services/posts/post.js`
+```js
+import { API_POSTS_URL, CONFIG } from "../../config/config";
+import axios from 'axios';
+
+export default {
+    listing() {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_POSTS_URL )
+        // NOTE: dont need .then() here, add async awiat where you want to fetch
+    },
+    add(payload) {
+        return axios.post( process.env.VUE_APP_API_BASE_URL + API_POSTS_URL , payload , CONFIG );
+    },
+    delete(id) {
+        return axios.delete( process.env.VUE_APP_API_BASE_URL + API_POSTS_URL + id, {}, CONFIG);
+    },
+    edit(payload, id) {
+        return axios.patch( process.env.VUE_APP_API_BASE_URL + + API_POSTS_URL + id , payload , CONFIG);
+    }
+}
+```
+
+
+
+
+
+#### Modify HomePage.vue
+
+```js
+<template>
+    <section class="home">
+        <div class="container">
+            <h5>Home Page</h5>
+
+            <div v-for="(p, index) in posts" :key="index">
+                {{p.id}}
+                {{p.title.rendered}}
+            </div>
+        
+        </div>
+    </section>
+</template>
+
+<script>
+import fetchPost from '../../../services/services'
+
+export default {
+    name: "Home_Page",
+    data() {
+        return {
+            posts: []
+        }
+    },
+
+    methods: {
+        async getFetchPost() {
+                try {
+                    let response = await fetchPost.listing();
+                    if (response.status == 200) {
+                       this.posts = response.data;
+                       console.log("Data Fetched: ", response.data)
+                    }
+                }  catch (ex) { console.log(ex) }
+            }
+        },
+    mounted(){
+        this.getFetchPost()
+    }
+}
+</script>
+```

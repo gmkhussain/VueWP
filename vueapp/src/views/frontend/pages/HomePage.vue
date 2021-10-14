@@ -13,8 +13,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { API_POSTS_URL } from '@/config/config.js'
+import fetchPost from '../../../services/services'
 
 export default {
     name: "Home_Page",
@@ -25,18 +24,18 @@ export default {
     },
 
     methods: {
-      async getPost() {
-        axios.get(`process.env.VUE_APP_API_BASE_URL${API_POSTS_URL}`)
-          .then( res=> {
-            console.log(res)
-              this.posts = res.data   
-            })
-          .catch( err=> console.log(err) )
-        }
-    },
+        async getFetchPost() {
+                try {
+                    let response = await fetchPost.listing();
+                    if (response.status == 200) {
+                       this.posts = response.data;
+                       console.log("Data Fetched: ", response.data)
+                    }
+                }  catch (ex) { console.log(ex) }
+            }
+        },
     mounted(){
-        this.getPost()
-        console.log("env", process.env )
+        this.getFetchPost()
     }
 }
 </script>
