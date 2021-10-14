@@ -16,7 +16,8 @@ const routes = [
     {
         path: '/login',
         name: 'Login_Page',
-        component: () => import('@/views/frontend/pages/LoginPage.vue')
+        component: () => import('@/views/frontend/pages/LoginPage.vue'),
+        meta: { layout: 'LoginLayout' } // <-- Layout
     }
 ];
 
