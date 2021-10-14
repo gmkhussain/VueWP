@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import fetchPost from '../../../services/services'
+import fetchPost from '../../../services/post/post'
 
 export default {
     name: "Home_Page",
@@ -29,7 +29,7 @@ export default {
                     let response = await fetchPost.listing();
                     if (response.status == 200) {
                        this.posts = response.data;
-                       console.log("Data Fetched: ", response.data)
+                       console.log("You Logged In: ", response.data)
                     }
                 }  catch (ex) { console.log(ex) }
             }

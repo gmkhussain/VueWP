@@ -20,6 +20,7 @@
                     <button type="submit" class="btn">Login</button>
                 </div>
                 <span v-if="loginFeedback">{{loginFeedback}}</span>
+                <h4 v-if="loggedIn"> Logged In! </h4>
             </form>
 
             <button @click="logoutFunc">Logout</button>
@@ -28,8 +29,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { JWT_AUTH_URL } from '../../../config/config.js'
+// import axios from 'axios'
+// import { JWT_AUTH_URL } from '../../../config/config.js'
+import postAuth from '../../../services/auth/auth'
 
 export default {
     name: "LoginPage",
@@ -52,24 +54,21 @@ export default {
       async postAuthFunc(e) {
            e.preventDefault()
 
-        await axios.post(`process.env.VUE_APP_API_BASE_URL${JWT_AUTH_URL}`,
-        {
-            username: this.loginData.username,
-            password: this.loginData.password
-         }
-        ).then( res=> {
-            console.log( "res", res );
-            localStorage.setItem("token", res.data.token)
-            this.loggedIn = true;
-            this.loginFeedback = ''
-            console.log( localStorage.getItem("token") )
+           try {
+                let response = await postAuth.login( {
+                    username: this.loginData.username,
+                    password: this.loginData.password
+                } );
 
-        }).catch( err=> {
-            console.log( "err", err );
-            localStorage.setItem("token", '---NO---')
-            console.log( localStorage.getItem("token") )
-            this.loginFeedback = "Incorrect username or password, please try again"
-        } )
+                if (response.status == 200) {                       
+                    localStorage.setItem("token", response.data.token)
+                    this.loggedIn = true;
+                    this.loginFeedback = ''
+                    console.log("Data Fetched: ", response.data)
+                }
+
+            }  catch (ex) { console.log(ex);  this.loginFeedback = 'Try again!' }
+
       }
     } 
 }
