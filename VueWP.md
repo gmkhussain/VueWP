@@ -277,3 +277,101 @@ export default {
 }
 </script>
 ```
+
+
+
+
+### Create custom
+Custom layout fetch layout base on ```route.meta.layout``` param
+
+see above code:
+```js
+// ...
+const component = await import(`@/views/frontend/layouts/${route.meta.layout}.vue`)
+// ...
+```
+
+
+
+
+#### Create LoginLayout.vue
+```js
+<template>
+  <div id="body-wrapper">
+      <main id="pageContent">
+        <slot />
+      </main>
+  </div>
+</template>
+
+<script>
+
+export default{
+  name: 'LoginLayout',
+  components: {
+    // Layout without Header & Footer
+  }
+}
+</script>
+```
+
+
+
+
+
+#### Add Layout and route in router file.
+
+// router/router.js
+```js
+import { createWebHistory, createRouter } from 'vue-router';
+// import HomePage from '../views/frontend/pages/HomePage.vue'
+import ContactPage from '../views/frontend/pages/ContactPage.vue'
+
+const routes = [
+    {
+        path: '/',
+        name: 'Home_Page',
+        component: () => import('@/views/frontend/pages/HomePage.vue')
+    },
+    {
+        path: '/contact',
+        name: 'Contact_Page',
+        component: ContactPage
+    },
+    {
+        path: '/login',
+        name: 'Login_Page',
+        component: () => import('@/views/frontend/pages/LoginPage.vue'),
+        meta: { layout: 'LoginLayout' } // <-- Layout
+    }
+];
+
+const router = createRouter({
+	history: createWebHistory(),
+	routes,
+});
+
+export default router;
+```
+
+
+
+
+
+### Create Login Page
+```js
+<template>
+    <section class="home">
+        <div class="container">
+            <h4>Login Page</h4>
+            <h5>Layout: LoginLayout ( without Header and Footer )</h5>
+        </div>
+    </section>
+</template>
+
+<script>
+export default {
+    name: "Login_Page"
+}
+</script>
+```
