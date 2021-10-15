@@ -18,7 +18,13 @@ const routes = [
         name: 'Login_Page',
         component: () => import('@/views/frontend/pages/LoginPage.vue'),
         meta: { layout: 'LoginLayout' } // <-- Layout
+    },
+    {
+        path: '/products',
+        name: 'Product_Page',
+        component: () => import('@/views/frontend/pages/products/ProductList.vue'),
     }
+
 ];
 
 const router = createRouter({
