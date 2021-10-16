@@ -1,42 +1,50 @@
 // import { API_POSTS_URL } from "../../config/config";
 
 import axios from "axios";
+import Oauth from "oauth-1.0a";
+import CryptoJS from "crypto-js";
+import jQuery from "jquery";
 
-// import Oauth from "oauth-1.0a";
-// import CryptoJS from "crypto-js";
-// import jQuery from "jquery";
+const ck = "ck_432c317baedf649171824da3bfe75457323815a3";
+const cs = "cs_1c3633593f8664ea25d3f4b55373dd05e20ff5d2";
+const baseURL = process.env.VUE_APP_API_BASE_URL;
 
+const Woocommerce = {
+  getProducts: () => {
+    return makeRequest("/wc/v3/products");
+  },
+  getProductByID: id => {
+    return makeRequest("/wc/v3/products/" + id);
+  }
+};
 
-/* 
-    ?oauth_consumer_key=ck_e23d2e0cdfced671b30dd3629332bfd1a9a3d64f&oauth_nonce=6ftDiQuNihag0tSLZWfIy9essqZ3pRLv&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1634312003&oauth_version=1.0&oauth_signature=lObwiJdWcjT%2BXXvmTK50016ftJw%3D
-*/
+function makeRequest(endpoint, method = "GET") {
+  const oauth = getOauth();
 
-// const oauth_ = getOauth();
+  const requestData = {
+    url: baseURL + endpoint,
+    method
+  };
 
-// function getOauth() {
-//     return Oauth({
-//     consumer: { key: CK, secret: CS },
-//     signature_method: 'HMAC-SHA1',
-//     hash_function(base_string, key) {
-//         return CryptoJS
-//             .createHmac('sha1', key)
-//             .update(base_string)
-//             .digest('base64')
-//     },
-//  })
-// }
+  const requestHTTP =
+    requestData.url + "?" + jQuery.param(oauth.authorize(requestData));
 
-// const WOO_CONFIG = {
-//     consumer: {
-//       key: CK,
-//       secret: CS
-//     }
-//   };
+    console.log("requestHTTP", requestHTTP)
 
-
-export default {
-    listing() {
-        // console.log( oauth_)
-       // return axios.get( process.env.VUE_APP_API_BASE_URL + PRODUCT_API_URL+'?'+oauth_ )
-    }
+  return axios.get(requestHTTP);
 }
+
+function getOauth() {
+  return Oauth({
+    consumer: {
+      key: ck,
+      secret: cs
+    },
+    signature_method: "HMAC-SHA1",
+    hash_function: function(base_string, key) {
+      return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA1(base_string, key));
+    }
+  });
+}
+
+export default Woocommerce;
