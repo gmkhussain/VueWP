@@ -980,3 +980,112 @@ export default {
     },
 //...
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Pagination
+
+// ProductList.vue
+```js
+<template>
+    <section class="products">
+       <div class="container">
+        // ...  ...
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li v-for="(pagi, index) in productsInfo.paginations" :key="index"
+                        class="page-item">
+                        <a class="page-link" @click="fetchNextPage(index+1)" >{{index+1}}</a>
+                    </li>
+                </ul>
+            </nav>
+
+        // ...  ...
+       </div>
+    </section>
+</template>
+
+<script>
+import Loader from '../../../../components/util/Loader.vue'
+import WooProduct from '../../../../services/wooCommerce/products'
+
+export default {
+    data() {
+       return {
+          products: [],
+          loading: false,
+          productsInfo: {
+            totalProducts: 0,
+            currentPage: 1,
+            perPageProcductLimit: 1,
+            paginations: 0 // <---
+          }
+       }
+    },
+    components: {
+        Loader
+    },
+    methods: {
+        async getProducts() {
+            this.loading = true;
+
+            let resp = await WooProduct.listing( this.productsInfo.perPageProcductLimit, this.productsInfo.currentPage);
+            console.log("resp", resp)
+            this.products = resp.data;
+            this.loading = false;
+
+        },
+        async paginatorFunc() { // <---
+
+            let resp = await WooProduct.all();
+            console.log("pagi", resp.data.length)
+            
+            this.productsInfo.totalProducts = resp.data.length
+
+            let pagiLimit = (this.productsInfo.totalProducts ) / this.productsInfo.perPageProcductLimit;
+
+            console.log(  (this.productsInfo.totalProducts ) + " ~ " + this.productsInfo.perPageProcductLimit )
+
+            let integr = Math.floor(pagiLimit), decimal = pagiLimit - integr;
+
+            let pagi = integr;
+            console.log({integr, decimal})
+            if(decimal !== 0 ) {
+                pagi=integr +1 
+            }  
+            
+            console.log( {pagi} )
+            this.productsInfo.paginations = pagi;
+            
+        },
+
+        fetchNextPage( gotoPageNum ) {
+            console.log("fetchNextPage", gotoPageNum )
+            this.productsInfo.currentPage = gotoPageNum;
+            this.getProducts()
+        }
+
+    },
+    mounted() {
+        this.getProducts()
+        this.paginatorFunc() // <---
+    }
+}
+</script>
+ 
+```

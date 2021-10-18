@@ -18,9 +18,6 @@ export default {
         console.log("URL", REQ )
         console.log("productLength", productLength)
         return axios.get( REQ )
-    },
-    pagination( perPageLimit=4, totalProducts ) {
-        return totalProducts / perPageLimit;
     }
 }
 

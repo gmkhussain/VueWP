@@ -24,12 +24,11 @@
 
                 </div>
 
-
-                <nav aria-label="Page navigation example">
+                <nav>
                     <ul class="pagination">
-                        <li v-for="(pagi, index) in productsInfo.paginations" :key="index"
+                        <li v-for="(page, index) in pagination.pages" :key="index"
                             class="page-item">
-                            <a class="page-link" href="#">{{index+1}}</a>
+                            <a class="page-link" @click="loadNewPage(index+1)" >{{index+1}}</a>
                         </li>
                     </ul>
                 </nav>
@@ -44,16 +43,17 @@ import Loader from '../../../../components/util/Loader.vue'
 
 import WooProduct from '../../../../services/wooCommerce/products'
 
+
 export default {
     data() {
        return {
           products: [],
           loading: false,
-          productsInfo: {
-            totalProducts: 0,
+          pagination: {
+            totalRecords: 0,
             currentPage: 1,
-            perPageProcductLimit: 3,
-            paginations: 0
+            perPage: 3,
+            pages: 0
           }
        }
     },
@@ -64,34 +64,29 @@ export default {
         async getProducts() {
             this.loading = true;
 
-            let resp = await WooProduct.listing( this.productsInfo.perPageProcductLimit, this.productsInfo.currentPage);
+            let resp = await WooProduct.listing( this.pagination.perPage, this.pagination.currentPage);
             console.log("resp", resp)
             this.products = resp.data;
-            this.loading = false; 
+            this.loading = false;
 
         },
         async paginatorFunc() {
 
-            let resp = await WooProduct.all();
-            console.log("pagi", resp.data.length)
+            let resp = await WooProduct.all();            
+                console.log("pagi", resp.data.length)
             
-            this.productsInfo.totalProducts = resp.data.length
+                this.pagination.totalRecords = resp.data.length
+            let numberOfPages = Math.ceil( this.pagination.totalRecords / this.pagination.perPage )
 
-            let pagiLimit = (this.productsInfo.totalProducts ) / this.productsInfo.perPageProcductLimit;
-
-            console.log(  (this.productsInfo.totalProducts ) + " ~ " + this.productsInfo.perPageProcductLimit )
-
-            let integr = Math.floor(pagiLimit), decimal = pagiLimit - integr;
-
-            let pagi = integr;
-            console.log({integr, decimal})
-            if(decimal !== 0 ) {
-                pagi=integr +1 
-            }  
+                console.log(numberOfPages)
+                this.pagination.pages = numberOfPages;
             
-            console.log({pagi} )
-            this.productsInfo.paginations = pagi;
-            
+        },
+
+        loadNewPage( gotoPageNum ) {
+            console.log("loadNewPage()", gotoPageNum )
+            this.pagination.currentPage = gotoPageNum;
+            this.getProducts()
         }
 
     },
