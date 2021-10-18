@@ -24,6 +24,14 @@
 
                 </div>
 
+                <Pagination 
+                            :totalRecords="pagination.totalRecords"
+                            :currentPage="pagination.currentPage"
+                            :perPage="pagination.perPage"
+                            :pages="pagination.pages"
+                            :pagiFunc="loadNewPage"
+                            />
+                            
                 <nav>
                     <ul class="pagination">
                         <li v-for="(page, index) in pagination.pages" :key="index"
@@ -39,9 +47,10 @@
 </template>
 
 <script>
-import Loader from '../../../../components/util/Loader.vue'
+import Loader from '@/components/util/Loader.vue'
+import Pagination from '@/components/util/Pagination.vue'
 
-import WooProduct from '../../../../services/wooCommerce/products'
+import WooProduct from '@/services/wooCommerce/products'
 
 
 export default {
@@ -58,7 +67,8 @@ export default {
        }
     },
     components: {
-        Loader
+        Loader,
+        Pagination
     },
     methods: {
         async getProducts() {
@@ -74,13 +84,13 @@ export default {
 
             let resp = await WooProduct.all();            
                 console.log("pagi", resp.data.length)
-            
+
                 this.pagination.totalRecords = resp.data.length
             let numberOfPages = Math.ceil( this.pagination.totalRecords / this.pagination.perPage )
 
                 console.log(numberOfPages)
                 this.pagination.pages = numberOfPages;
-            
+
         },
 
         loadNewPage( gotoPageNum ) {

@@ -8,34 +8,74 @@
                 {{p.title.rendered}}
             </div>
         
+            <Pagination 
+                :totalRecords="pagination.totalRecords"
+                :currentPage="pagination.currentPage"
+                :perPage="pagination.perPage"
+                :pages="pagination.pages"
+                :pagiFunc="loadNewPage"
+                />
+                    
         </div>
     </section>
 </template>
 
 <script>
-import fetchPost from '../../../services/post/post'
+import Pagination from '@/components/util/Pagination.vue'
+
+import fetchPost from '@/services/post/post'
 
 export default {
     name: "Home_Page",
+    components: {
+        Pagination
+    },
     data() {
         return {
-            posts: []
+            posts: [],
+            pagination: {
+                totalRecords: 0,
+                currentPage: 1,
+                perPage: 3,
+                pages: 0
+            }
         }
     },
 
     methods: {
         async getFetchPost() {
                 try {
-                    let response = await fetchPost.listing();
+                    let response = await fetchPost.listing( this.pagination.perPage, this.pagination.currentPage);
                     if (response.status == 200) {
                        this.posts = response.data;
                        console.log("You Logged In: ", response.data)
                     }
                 }  catch (ex) { console.log(ex) }
-            }
         },
+        
+        async paginatorFunc() {
+
+            let resp = await fetchPost.all();            
+                console.log("pagi", resp.data.length)
+
+                this.pagination.totalRecords = resp.data.length
+            let numberOfPages = Math.ceil( this.pagination.totalRecords / this.pagination.perPage )
+
+                console.log(numberOfPages)
+                this.pagination.pages = numberOfPages;
+        },
+
+        loadNewPage( gotoPageNum ) {
+            console.log("loadNewPage()", gotoPageNum )
+            this.pagination.currentPage = gotoPageNum;
+            this.getFetchPost()
+        }
+
+
+    },
     mounted(){
         this.getFetchPost()
+        this.paginatorFunc()
     }
 }
 </script>
