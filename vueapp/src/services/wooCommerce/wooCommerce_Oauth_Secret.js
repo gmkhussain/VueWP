@@ -26,10 +26,9 @@ function makeRequest(endpoint, method = "GET") {
     method
   };
 
-  const requestHTTP =
-    requestData.url + "?" + jQuery.param(oauth.authorize(requestData));
+  const requestHTTP = requestData.url + "?" + jQuery.param(oauth.authorize(requestData));
 
-    console.log("requestHTTP", requestHTTP)
+  console.log("requestHTTP", requestHTTP)
 
   return axios.get(requestHTTP);
 }
