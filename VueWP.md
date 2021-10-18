@@ -946,3 +946,37 @@ export default {
 ```
 
 
+
+
+
+### Loader
+- Create ```components\util\Loader.vue```
+```js
+<template>
+    <div class="loader">
+        <div>Loading...</div>
+    </div>
+</template>
+
+```
+
+
+- Add ```Loader``` on ```ProductList.vue```
+
+```js
+//...
+    <div v-if="loading" class="text-center">
+        <Loader /> 
+    </div>
+//..
+
+//..
+export default {
+    data() {
+       return {
+          products: [],
+          loading: false
+       }
+    },
+//...
+```
