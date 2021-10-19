@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const CK = "ck_e23d2e0cdfced671b30dd3629332bfd1a9a3d64f";
-const CS = "cs_efc1cfbaf33f90dc5a95f8e59129c4d5c5471995";
+const CK = process.env.VUE_APP_WOO_CK;
+const CS = process.env.VUE_APP_WOO_CS;
 
 const PRODUCT_API_URL = "/wc/v3/products";
 let productLength = 0;
