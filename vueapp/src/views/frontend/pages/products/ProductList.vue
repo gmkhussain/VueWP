@@ -12,7 +12,7 @@
 
                 <div class="product col-md-3" v-for="(product, index) in products" :key="index">
 
-                    <div class="product__img">
+                    <div class="product__img" v-if="product.images.length !==0">
                         <img :src="product.images[0].src" alt="image" />
                     </div>
 
