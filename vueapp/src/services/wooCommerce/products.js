@@ -18,6 +18,11 @@ export default {
         console.log("URL", REQ )
         console.log("productLength", productLength)
         return axios.get( REQ )
+    },
+    show(_id) {
+        let REQ = process.env.VUE_APP_API_BASE_URL + PRODUCT_API_URL+`/${_id}/?consumer_key=${CK}&consumer_secret=${CS}`;
+        console.log("URL", REQ )
+        return axios.get( REQ )
     }
 }
 
