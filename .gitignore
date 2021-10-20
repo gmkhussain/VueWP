@@ -12,3 +12,4 @@
 /wordpress/wp-includes
 /wordpress/*.php
 /node_modules
+/vueapp/.env

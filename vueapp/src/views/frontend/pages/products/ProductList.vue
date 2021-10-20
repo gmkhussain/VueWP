@@ -20,7 +20,7 @@
 
                     <p v-html="product.price_html"></p>
 
-                    <router-link :to="'/' + product.slug">View</router-link>
+                    <router-link :to="'/products/' + product.id">View</router-link>
 
                 </div>
 
@@ -72,15 +72,20 @@ export default {
     },
     methods: {
         async getProducts() {
-            this.loading = true;
+            try {
+                this.loading = true;
 
-            let resp = await WooProduct.listing( this.pagination.perPage, this.pagination.currentPage);
-            console.log("resp", resp)
-            this.products = resp.data;
-            this.loading = false;
+                let resp = await WooProduct.listing( this.pagination.perPage, this.pagination.currentPage);
+                console.log("resp", resp)
+                this.products = resp.data;
+                this.loading = false;
+            } catch (err) {
+                console.log("Err:", err)
+            }
 
         },
         async paginatorFunc() {
+            try {
 
             let resp = await WooProduct.all();            
                 console.log("pagi", resp.data.length)
@@ -90,6 +95,9 @@ export default {
 
                 console.log(numberOfPages)
                 this.pagination.pages = numberOfPages;
+            } catch (err) {
+                console.log("Err:", err)
+            }
 
         },
 
