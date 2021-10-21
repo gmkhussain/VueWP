@@ -1,7 +1,32 @@
+### ADD TO CART
+
 POST http://localhost/projects/_rd/VueWP/wordpress/wp-json/cocart/v2/cart/add-item?consumer_key=ck_e23d2e0cdfced671b30dd3629332bfd1a9a3d64f&consumer_secret=cs_efc1cfbaf33f90dc5a95f8e59129c4d5c5471995
 content-type: application/json
 
 {
-  "id": "20",
-  "quantity": "222"
+  "id": "19",
+  "quantity": "77"
 }
+
+
+
+
+
+### VIEW CART
+
+GET http://localhost/projects/_rd/VueWP/wordpress/wp-json/cocart/v2/cart/items?consumer_key=ck_e23d2e0cdfced671b30dd3629332bfd1a9a3d64f&consumer_secret=cs_efc1cfbaf33f90dc5a95f8e59129c4d5c5471995
+
+
+
+
+### VIEW CART - SINGLE
+
+GET http://localhost/projects/_rd/VueWP/wordpress/wp-json/cocart/v2/cart/item/1f0e3dad99908345f7439f8ffabdffc4?consumer_key=ck_e23d2e0cdfced671b30dd3629332bfd1a9a3d64f&consumer_secret=cs_efc1cfbaf33f90dc5a95f8e59129c4d5c5471995
+
+// 1f0e3dad99908345f7439f8ffabdffc4 
+
+
+#### DELETE
+
+DELETE http://localhost/projects/_rd/VueWP/wordpress/wp-json/cocart/v2/cart/cart/item/19/?consumer_key=ck_e23d2e0cdfced671b30dd3629332bfd1a9a3d64f&consumer_secret=cs_efc1cfbaf33f90dc5a95f8e59129c4d5c5471995
+content-type: application/json
