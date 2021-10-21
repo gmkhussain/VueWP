@@ -1,0 +1,7 @@
+POST http://localhost/projects/_rd/VueWP/wordpress/wp-json/cocart/v2/cart/add-item?consumer_key=ck_e23d2e0cdfced671b30dd3629332bfd1a9a3d64f&consumer_secret=cs_efc1cfbaf33f90dc5a95f8e59129c4d5c5471995
+content-type: application/json
+
+{
+  "id": "20",
+  "quantity": "222"
+}
