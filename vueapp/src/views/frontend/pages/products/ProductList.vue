@@ -22,6 +22,8 @@
 
                     <router-link :to="'/products/' + product.id">View</router-link>
 
+                    <button @click="addToCartFunc(product.id, 1)">Add to Cart</button>
+
                 </div>
 
                 <Pagination 
@@ -43,6 +45,11 @@
 
             </div>
        </div>
+
+       <div v-if="cartHasItem">
+           <CartPage />
+       </div>
+       
     </section>
 </template>
 
@@ -50,7 +57,11 @@
 import Loader from '@/components/util/Loader.vue'
 import Pagination from '@/components/util/Pagination.vue'
 
+import CartPage from '@/views/frontend/pages/products/Cart.vue'
+
+// Services
 import WooProduct from '@/services/wooCommerce/products'
+import CartService from '@/services/cart/cart'
 
 
 export default {
@@ -62,13 +73,15 @@ export default {
             totalRecords: 0,
             currentPage: 1,
             perPage: 3,
-            pages: 0
-          }
+            pages: 0,
+          },
+         cartHasItem: false,
        }
     },
     components: {
         Loader,
-        Pagination
+        Pagination,
+        CartPage
     },
     methods: {
         async getProducts() {
@@ -105,12 +118,29 @@ export default {
             console.log("loadNewPage()", gotoPageNum )
             this.pagination.currentPage = gotoPageNum;
             this.getProducts()
+        },
+
+
+
+        async addToCartFunc(_id, _qty){
+                console.log("asd", _id)
+                let itemData = { "id": _id.toString(),  "quantity": _qty.toString() };
+
+            try {
+                let resp = await CartService.add( itemData );
+                console.log( resp )
+                localStorage.setItem("cartHasItem", true)
+                this.cartHasItem = localStorage.getItem("cartHasItem")
+            } catch(err) {
+                console.log("Err", err )
+            }
         }
 
     },
     mounted() {
         this.getProducts()
         this.paginatorFunc()
+
     }
 }
 </script>

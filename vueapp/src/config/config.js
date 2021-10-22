@@ -6,6 +6,8 @@ export const API_POSTS_URL = `/wp/v2/posts`;
 
 export const CONFIG = {
     headers: {
-        'Accept': 'application/json',
+        // 'Access-Control-Allow-Origin': '*',
+        'content-type': 'application/json',
+        // 'Accept': 'application/json',
     },
 };
