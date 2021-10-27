@@ -3,9 +3,14 @@
         <div class="container">
             <h5>Home Page</h5>
 
-            <div v-for="(p, index) in posts" :key="index">
-                {{p.id}}
-                {{p.title.rendered}}
+            <div v-if="errorFeedback">
+                {{errorFeedback}}
+            </div>
+            <div v-else>
+                <div v-for="(p, index) in posts" :key="index">
+                    {{p.id}}
+                    {{p.title.rendered}}
+                </div>
             </div>
         
             <Pagination 
@@ -33,16 +38,21 @@ export default {
     data() {
         return {
             posts: [],
+<<<<<<< HEAD
             pagination: {
                 totalRecords: 0,
                 currentPage: 1,
                 perPage: 3,
                 pages: 0
             }
+=======
+            errorFeedback: null
+>>>>>>> 2-Fetch-Posts
         }
     },
 
     methods: {
+<<<<<<< HEAD
         async getFetchPost() {
                 try {
                     let response = await fetchPost.listing( this.pagination.perPage, this.pagination.currentPage);
@@ -69,6 +79,18 @@ export default {
             console.log("loadNewPage()", gotoPageNum )
             this.pagination.currentPage = gotoPageNum;
             this.getFetchPost()
+=======
+        async getPost() {
+            axios.get(`//localhost/projects/_rd/VueWP/wordpress/wp-json/wp/v2/posts`)
+                .then( res=> {
+                    console.log(res)
+                    this.posts = res.data   
+                })
+                .catch( err=> { 
+                    console.log(err)
+                    this.errorFeedback = err
+                } )
+>>>>>>> 2-Fetch-Posts
         }
 
 
