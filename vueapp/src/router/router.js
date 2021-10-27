@@ -23,6 +23,11 @@ const routes = [
         path: '/products',
         name: 'Product_Page',
         component: () => import('@/views/frontend/pages/products/ProductList.vue'),
+    },
+    {
+        path: '/checkout',
+        name: 'Checkout_Page',
+        component: () => import('@/views/frontend/pages/products/Checkout.vue'),
     }
 
 ];
