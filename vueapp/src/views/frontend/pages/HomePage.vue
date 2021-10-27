@@ -2,11 +2,15 @@
     <div>
         <h1>Home Page</h1>
         
-        <div v-for="(p, index) in posts" :key="index">
-            {{p.id}}
-            {{p.title.rendered}}
+        <div v-if="errorFeedback">
+            {{errorFeedback}}
         </div>
-    
+        <div v-else>
+            <div v-for="(p, index) in posts" :key="index">
+                {{p.id}}
+                {{p.title.rendered}}
+            </div>
+        </div>
     </div>
 </template>
 
@@ -17,18 +21,22 @@ export default {
     name: "Home_Page",
     data() {
         return {
-            posts: []
+            posts: [],
+            errorFeedback: null
         }
     },
 
     methods: {
         async getPost() {
-            axios.get(`http://localhost/projects/_rnd/VueWP/wordpress/wp-json/wp/v2/posts`)
+            axios.get(`//localhost/projects/_rd/VueWP/wordpress/wp-json/wp/v2/posts`)
                 .then( res=> {
                     console.log(res)
                     this.posts = res.data   
                 })
-                .catch( err=> console.log(err) )
+                .catch( err=> { 
+                    console.log(err)
+                    this.errorFeedback = err
+                } )
         }
     },
     mounted(){
