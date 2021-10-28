@@ -1089,3 +1089,163 @@ export default {
 </script>
  
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Boilerplate
+
+### Create API for site settings
+- Add this code in ```functions.php```
+- API Endpoint: ```your-project.url/wp-json/site_setting/v1/all```
+
+- Login into ```Wordpress > Appearnce > Customize``` update setting ( optional ).
+
+Note: Use child theme and follow this folder structure.
+
+// functions.php
+```js
+<?php
+include "functions/api_site_settings.php";
+```
+
+// functions/api_site_settings.php
+```js
+<?php
+add_action( 'rest_api_init', function () {
+	register_rest_route( 'site_settings/v1', '/all', array(
+	  'methods' => 'GET',
+	  'callback' => 'handle_get_all',
+        //   'permission_callback' => function () {
+        //   	return current_user_can( 'edit_others_posts' );
+        //   }
+	) );
+  } );
+  
+  function handle_get_all( $data ) {
+	  global $wpdb;
+	  $query = "SELECT * FROM `wp_options` 
+	  			where
+				  	option_name = 'site_logo'
+				OR option_name = 'blogname'
+				OR option_name = 'site_icon'
+				OR option_name = 'blogdescription' 
+	   		";
+	  $list = $wpdb->get_results($query);
+	  
+	  $resp = array();
+	 
+	  for($i=0;$i< count($list) ;$i++) { 
+	  	$resp += array(
+		  $list[$i]->option_name => $list[$i]->option_value,
+		);
+	  }
+	 
+	return $resp;
+  }
+```
+
+
+
+
+
+
+// services/siteSettings.js
+```js
+// import { API_POSTS_URL, CONFIG } from "../../config/config";
+import axios from 'axios';
+
+const API_SITE_SETTINGS_URL = '/site_settings/v1/all';
+const API_SITE_LOGO_URL = '/wp/v2/media/';
+
+export default {
+    all() {
+        console.log("Site Settting Services works...");
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_SITE_SETTINGS_URL )
+        // NOTE: dont need .then() here, add async awiat where you want to fetch
+    },
+    siteLogo( _LogoId ) {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_SITE_LOGO_URL + _LogoId )
+    }
+}
+```
+
+
+
+
+
+
+// views/frontend/layout/Header.vue
+```js
+<template>
+//...
+    <a class="navbar-brand" href="#">
+        <span v-if="siteLogo">
+           <img :src="siteLogo" alt="">
+        </span>
+        <span v-else>No Logo</span>
+    </a>
+//...
+</template>
+
+
+<script>
+import siteSettingsService from '@/services/siteSettings/siteSettings'
+
+export default {
+  name: "Header",
+  data() {
+    return {
+       siteLogo: null,
+       siteInfo: [],
+    }
+  },
+  methods: {
+    async getSiteInfo() { // calling in created()
+      try {
+        let resp = await siteSettingsService.all() // Getting Site Setting All Info.
+        this.siteInfo = resp.data;
+        console.log("site Info: ", this.siteInfo )
+
+        this.getSiteLogo( this.siteInfo.site_logo ) // Getting Logo URL
+        
+      } catch ( err ) {
+        console.warn("site Info Err", err )
+      }
+      
+    },
+    async getSiteLogo( _logoId ) {
+      try {
+        let resp = await siteSettingsService.siteLogo( _logoId )
+        this.siteLogo = resp.data.source_url // Store into data()
+
+        console.log("site logo", resp)
+      } catch (err) {
+        console.warn("site logo Err", err )
+      }
+    }
+  },
+  created() {
+    this.getSiteInfo()
+  }
+}
+</script>
+```
