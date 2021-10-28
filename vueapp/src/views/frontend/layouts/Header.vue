@@ -48,6 +48,7 @@
 
 <script>
 import siteSettingsService from '@/services/siteSettings/siteSettings'
+import menusService from '@/services/menus/menus'
 
 export default {
   name: "Header",
@@ -55,6 +56,7 @@ export default {
     return {
        siteLogo: null,
        siteInfo: [],
+       mainNav: [],
     }
   },
   methods: {
@@ -80,10 +82,20 @@ export default {
       } catch (err) {
         console.warn("site logo Err", err )
       }
-    }
+    },
+
+    async getMainNav() {
+        try {
+          let resp = await menusService.menu(23)
+          console.log("Menu:", resp )
+        } catch( err ) {
+          console.warn("Menu", err )
+        }
+    },
   },
   created() {
     this.getSiteInfo()
+    this.getMainNav()
   }
 }
 </script>

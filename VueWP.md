@@ -1249,3 +1249,15 @@ export default {
 }
 </script>
 ```
+
+
+
+
+
+
+
+
+### Menus API 
+- Add plugin ```WP API Menus``` ( https://wordpress.org/plugins/wp-api-menus/ )
+- Open URL ```your-project.url/wp-json/wp-api-menus/v2/menus/__MENU_ID__```
+
