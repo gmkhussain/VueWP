@@ -3,6 +3,8 @@
         <div class="container">
             <h5>Posts Page</h5>
 
+            {{errorFeedback}}
+    
             <div v-for="(p, index) in posts" :key="index">
                 {{p.id}}
                 {{p.title.rendered}}
@@ -38,7 +40,8 @@ export default {
                 currentPage: 1,
                 perPage: 3,
                 pages: 0
-            }
+            },
+            errorFeedback: null
         }
     },
 
@@ -50,7 +53,10 @@ export default {
                        this.posts = response.data;
                        console.log("You Logged In: ", response.data)
                     }
-                }  catch (ex) { console.log(ex) }
+                }  catch (ex) {
+                    console.log(ex)
+                    this.errorFeedback = ex
+                }
         },
         
         async paginatorFunc() {

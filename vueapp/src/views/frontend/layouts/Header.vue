@@ -57,6 +57,7 @@ export default {
        siteLogo: null,
        siteInfo: [],
        mainNav: [],
+       errorFeedback: null
     }
   },
   methods: {
@@ -70,6 +71,7 @@ export default {
         
       } catch ( err ) {
         console.warn("site Info Err", err )
+        this.errorFeedback = err
       }
       
     },
@@ -84,18 +86,29 @@ export default {
       }
     },
 
-    async getMainNav() {
+    async getMenus() {
         try {
-          let resp = await menusService.menu(23)
-          console.log("Menu:", resp )
+          let resp = await menusService.all()
+          
+          console.log("Menu:", resp.data[0].ID )
+
+          this.getMenuItems( resp.data[0].ID )
+
         } catch( err ) {
           console.warn("Menu", err )
         }
     },
+
+    async getMenuItems( _id ) {
+        let respMenu = await menusService.menu( _id )
+        console.log("respMenu: ",  respMenu )
+        this.mainNav = respMenu;
+    }
+
   },
   created() {
     this.getSiteInfo()
-    this.getMainNav()
+    this.getMenus()
   }
 }
 </script>
