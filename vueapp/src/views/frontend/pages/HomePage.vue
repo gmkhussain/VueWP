@@ -22,7 +22,7 @@
                                    <span v-html="item.content.rendered"></span>
                                </div>
                                <div class="col-md-6">
-                                   IMG ID:  {{item.featured_media}}
+                                   <img :src="item.featured_media" />
                                </div>
                            </div>
                         </div> 
@@ -44,6 +44,7 @@
 
 <script>
 import cptService from '@/services/post/custom_post_types.js'
+import mediaService from '@/services/media/media.js'
 
 export default {
     name: "Home_Page",
@@ -57,8 +58,20 @@ export default {
         async getHeroCarousel() {
             try {
                 let resp = await cptService.all('hero_slider');
-                console.log( "getHeroCarousel -> resp", resp.data )
+                
+                /*
+                  Getting Each Image URL by Loop
+                */
+                for (let singleData of resp.data ) {
+                    await mediaService.single( singleData.featured_media ).then( response => {
+                          //console.log("Single URL -> ", response.data.guid.rendered)
+                          singleData.featured_media = response.data.guid.rendered; // stored into `featured_media`
+                       }
+                    ) 
+                }
+                
                 this.heroCarousel = resp.data;
+                console.log("this.heroCarousel", this.heroCarousel )
             }
             catch (err) {
                 console.log("getHeroCarousel -> Err -> ", err )

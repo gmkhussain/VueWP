@@ -1439,3 +1439,87 @@ export default {
 }
 </script>
 ```
+
+
+
+
+
+
+
+
+
+
+
+### Single Media Service and Template
+
+ 
+// media.js
+```js
+import axios from 'axios';
+
+const API_MEDIA_URL = '/wp/v2/media/';
+
+export default {
+    all() {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_MEDIA_URL)
+    },
+    single( _imageId ) {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_MEDIA_URL + _imageId )
+    },
+    singleUrl( _imageId ) { // <--
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_MEDIA_URL + _imageId )
+    }
+}
+
+```
+
+
+
+
+
+
+// HomePage.vue
+```js
+<script>
+import cptService from '@/services/post/custom_post_types.js'
+import mediaService from '@/services/media/media.js'
+
+export default {
+    name: "Home_Page",
+    data() {
+        return {
+            heroCarousel: [],
+            pageData: [],
+        }
+    },
+    methods: {
+        async getHeroCarousel() {
+            try {
+                let resp = await cptService.all('hero_slider');
+                
+                /*
+                  Getting Each Image URL by Loop
+                */
+                for (let singleData of resp.data ) {
+                    await mediaService.single( singleData.featured_media ).then( response => {
+                          //console.log("Single URL -> ", response.data.guid.rendered)
+                          singleData.featured_media = response.data.guid.rendered; // stored into `featured_media`
+                       }
+                    ) 
+                }
+                
+                this.heroCarousel = resp.data;
+                console.log("this.heroCarousel", this.heroCarousel )
+            }
+            catch (err) {
+                console.log("getHeroCarousel -> Err -> ", err )
+            }
+        }
+    },
+    mounted(){
+        console.log("Ready!");
+        this.getHeroCarousel()
+    }
+}
+</script>
+```
