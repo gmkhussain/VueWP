@@ -112,3 +112,15 @@ export default {
   }
 }
 </script>
+
+
+
+<style scoped>
+.navbar-brand {
+  max-height: 40px;
+}
+.navbar-brand img {
+  width: 100px;
+  height: 40px;
+}
+</style>

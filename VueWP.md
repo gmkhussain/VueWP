@@ -1261,3 +1261,181 @@ export default {
 - Add plugin ```WP API Menus``` ( https://wordpress.org/plugins/wp-api-menus/ )
 - Open URL ```your-project.url/wp-json/wp-api-menus/v2/menus/__MENU_ID__```
 
+
+
+
+
+
+
+
+
+
+
+## Custom Post Type APIs
+
+- Add CPT in Wordpress
+// "functions/cpt_hero_carousel.php";
+```js
+<?php
+
+/****my_slider_args category in posttype***/
+$my_slider_args = array(
+    'labels' => array(
+    'name' => 'hero_slider',
+    'singular_name' => 'hero_slider'),
+    'description' => 'Allows you to build custom hero_slider items and link them to categories',
+	'menu_icon' => 'dashicons-images-alt2',
+    'public' => true,
+    'show_ui' => true,
+    'menu_position' => 20,
+    'supports' => array('title', 'editor', 'thumbnail'),
+    'has_archive' => true,
+    'rewrite' => array('slug' => 'hero_slider'),
+    'can_export' => true
+);
+
+/* http://codex.wordpress.org/Function_Reference/register_post_type */
+register_post_type('hero_slider', $my_slider_args);
+
+$categories_labels = array(
+    'label' => 'Categories',
+    'hierarchical' => true,
+    'query_var' => true
+);
+
+/*  Register taxonomies for extra post type capabilities */
+register_taxonomy('my_slider_categories', 'hero_slider', $categories_labels);
+/****./my_slider_args in posttype***/
+```
+
+
+
+
+- Add API 
+// "functions/api_cpt_hero_carousel.php";
+```js
+<?php 
+
+add_action( 'init', 'hero_slider_cpt' );
+function hero_slider_cpt() {
+    $args = array(
+      'public'       => true,
+      'show_in_rest' => true,
+      'label'        => 'hero_slider'
+    );
+    register_post_type( 'hero_slider', $args );
+}
+```
+
+
+
+
+
+
+
+
+#### Fetch Custom Post Type in Vue
+
+// services/post/custom_post_types.js
+```js
+import { CONFIG } from "../../config/config";
+import axios from 'axios';
+
+const API_CPT_URL = '/wp/v2/';
+
+export default {
+    all( _CPT_NAME ) {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_CPT_URL + _CPT_NAME )
+        // NOTE: dont need .then() here, add async awiat where you want to fetch
+    },
+    listing(perPageLimit=1, pageNumber=1) {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_CPT_URL+`?per_page=${perPageLimit}&page=${pageNumber}` )
+    },
+    add(payload) {
+        return axios.post( process.env.VUE_APP_API_BASE_URL + API_CPT_URL , payload , CONFIG );
+    },
+    delete(id) {
+        return axios.delete( process.env.VUE_APP_API_BASE_URL + API_CPT_URL + id, {}, CONFIG);
+    },
+    edit(payload, id) {
+        return axios.patch( process.env.VUE_APP_API_BASE_URL + + API_CPT_URL + id , payload , CONFIG);
+    }
+}
+```
+
+
+// HomePage.vue
+```js
+<template>
+    <div>        
+        <section class="hero-area" id="heroArea">
+            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <template v-for="( item, index ) in heroCarousel" :key="index">
+                        <button type="button"
+                                data-bs-target="#heroCarousel"
+                                data-bs-slide-to="0"
+                                :class=" index==0 ? 'carousel-item active' : 'carousel-item' "
+                                aria-current="true"
+                                aria-label="Slide 1"></button>
+                    </template>
+                </div>
+                <div class="carousel-inner">
+                    <template v-for="( item, index ) in heroCarousel" :key="index">
+                        <div :class=" index==0 ? 'carousel-item active' : 'carousel-item' ">
+                           <div class="row">
+                               <div class="col-md-6">
+                                   <h2>{{item.title.rendered}}</h2>
+                                   <span v-html="item.content.rendered"></span>
+                               </div>
+                               <div class="col-md-6">
+                                   IMG ID:  {{item.featured_media}}
+                               </div>
+                           </div>
+                        </div> 
+                    </template>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
+
+    </div>
+</template>
+
+<script>
+import cptService from '@/services/post/custom_post_types.js'
+
+export default {
+    name: "Home_Page",
+    data() {
+        return {
+            heroCarousel: [],
+            pageData: [],
+        }
+    },
+    methods: {
+        async getHeroCarousel() {
+            try {
+                let resp = await cptService.all('hero_slider');
+                console.log( "getHeroCarousel -> resp", resp.data )
+                this.heroCarousel = resp.data;
+            }
+            catch (err) {
+                console.log("getHeroCarousel -> Err -> ", err )
+            }
+        }
+    },
+    mounted(){
+        console.log("Ready!");
+        this.getHeroCarousel()
+    }
+}
+</script>
+```
