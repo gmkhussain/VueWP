@@ -7,8 +7,8 @@
                     <template v-for="( item, index ) in heroCarousel" :key="index">
                         <button type="button"
                                 data-bs-target="#heroCarousel"
-                                data-bs-slide-to="0"
-                                :class=" index==0 ? 'carousel-item active' : 'carousel-item' "
+                                :data-bs-slide-to="index"
+                                :class=" index==0 ? 'active' : ' ' "
                                 aria-current="true"
                                 aria-label="Slide 1"></button>
                     </template>
@@ -69,7 +69,7 @@ export default {
                        }
                     ) 
                 }
-                
+
                 this.heroCarousel = resp.data;
                 console.log("this.heroCarousel", this.heroCarousel )
             }
@@ -84,3 +84,10 @@ export default {
     }
 }
 </script>
+
+
+<style scoped>
+#heroArea {
+    background: #e3d4d4;
+}
+</style>
