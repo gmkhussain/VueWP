@@ -1523,3 +1523,277 @@ export default {
 }
 </script>
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Boilerplate
+
+
+### Carosuel 
+// HomePage.vue
+```js
+<template>
+    <div>
+        
+        <section class="hero-area" id="heroArea">
+            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <template v-for="( item, index ) in heroCarousel" :key="index">
+                        <button type="button"
+                                data-bs-target="#heroCarousel"
+                                :data-bs-slide-to="index"
+                                :class=" index==0 ? 'active' : ' ' "
+                                aria-current="true"
+                                aria-label="Slide 1"></button>
+                    </template>
+                </div>
+                <div class="carousel-inner">
+                    <template v-for="( item, index ) in heroCarousel" :key="index">
+                        <div :class=" index==0 ? 'carousel-item active' : 'carousel-item' ">
+                           <div class="row">
+                               <div class="col-md-6">
+                                   <h2>{{item.title.rendered}}</h2>
+                                   <span v-html="item.content.rendered"></span>
+                               </div>
+                               <div class="col-md-6">
+                                   <img :src="item.featured_media" />
+                               </div>
+                           </div>
+                        </div> 
+                    </template>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
+
+    </div>
+</template>
+
+<script>
+import cptService from '@/services/post/custom_post_types.js'
+import mediaService from '@/services/media/media.js'
+
+export default {
+    name: "Home_Page",
+    data() {
+        return {
+            heroCarousel: [],
+            pageData: [],
+        }
+    },
+    methods: {
+        async getHeroCarousel() {
+            try {
+                let resp = await cptService.all('hero_slider');
+                
+                /*
+                  Getting Each Image URL by Loop
+                */
+                for (let singleData of resp.data ) {
+                    await mediaService.single( singleData.featured_media ).then( response => {
+                          //console.log("Single URL -> ", response.data.guid.rendered)
+                          singleData.featured_media = response.data.guid.rendered; // stored into `featured_media`
+                       }
+                    ) 
+                }
+
+                this.heroCarousel = resp.data;
+                console.log("this.heroCarousel", this.heroCarousel )
+            }
+            catch (err) {
+                console.log("getHeroCarousel -> Err -> ", err )
+            }
+        }
+    },
+    mounted(){
+        console.log("Ready!");
+        this.getHeroCarousel()
+    }
+}
+</script>
+
+
+<style scoped>
+#heroArea {
+    background: #e3d4d4;
+}
+</style>
+```
+
+
+
+
+
+
+### Advanced Custom Fields
+- Install ```Advanced Custom Fields``` plugin on wordpress
+- Add New Field Group
+- Select ```location```
+- show this field group if ```page``` is equal to ```home```
+- Goto page and edit home page, you can see ACFs there.
+
+- ACF to REST-API
+- ```https://wordpress.org/plugins/acf-to-rest-api/```
+- Goto and check ```your-project.url/wp-json/wp/v2/pages```
+- Find ```acf```
+
+
+#### Add Page Services
+
+// services/page/page.js
+```js
+// import { API_POSTS_URL, CONFIG } from "../../config/config";
+import axios from 'axios';
+
+const API_PAGE_URL = '/wp/v2/pages/'
+
+export default {
+    all() {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_PAGE_URL )
+        // NOTE: dont need .then() here, add async awiat where you want to fetch
+    },
+    single(_pageId) {
+        return axios.get( process.env.VUE_APP_API_BASE_URL + API_PAGE_URL + _pageId )
+    },
+}
+```
+
+
+// HomePage.vue
+```js
+<template>
+    <div>
+        
+        <section class="hero-area" id="heroArea">
+            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <template v-for="( item, index ) in heroCarousel" :key="index">
+                        <button type="button"
+                                data-bs-target="#heroCarousel"
+                                :data-bs-slide-to="index"
+                                :class=" index==0 ? 'active' : ' ' "
+                                aria-current="true"
+                                aria-label="Slide 1"></button>
+                    </template>
+                </div>
+                <div class="carousel-inner">
+                    <template v-for="( item, index ) in heroCarousel" :key="index">
+                        <div :class=" index==0 ? 'carousel-item active' : 'carousel-item' ">
+                           <div class="row">
+                               <div class="col-md-6">
+                                   <h2>{{item.title.rendered}}</h2>
+                                   <span v-html="item.content.rendered"></span>
+                               </div>
+                               <div class="col-md-6">
+                                   <img :src="item.featured_media" />
+                               </div>
+                           </div>
+                        </div> 
+                    </template>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!--NEW-->
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span v-html="pageData.acf.intro_text_1"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <img :src="pageData.acf.intro_image_1.url" alt="image" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</template>
+
+<script>
+import cptService from '@/services/post/custom_post_types.js'
+import mediaService from '@/services/media/media.js'
+import pageService from '@/services/page/page.js'
+
+export default {
+    name: "Home_Page", // ID: 115
+    data() {
+        return {
+            heroCarousel: [],
+            pageData: [],
+        }
+    },
+    methods: {
+        async getHeroCarousel() {
+            try {
+                let resp = await cptService.all('hero_slider');
+                
+                /*
+                  Getting Each Image URL by Loop
+                */
+                for (let singleData of resp.data ) {
+                    await mediaService.single( singleData.featured_media ).then( response => {
+                          //console.log("Single URL -> ", response.data.guid.rendered)
+                          singleData.featured_media = response.data.guid.rendered; // stored into `featured_media`
+                       }
+                    ) 
+                }
+
+                this.heroCarousel = resp.data;
+                console.log("this.heroCarousel", this.heroCarousel )
+            }
+            catch (err) {
+                console.log("getHeroCarousel -> Err -> ", err )
+            }
+        },
+
+        async getHomePageData( id ) {  // <--- NEW
+            console.log("Page Id:", id)
+            try {
+                let resp = await pageService.single( id )
+                
+                this.pageData = resp.data;
+                console.log("Home Page Data ->", this.pageData )
+
+            } catch ( err ) {
+                console.log("getPageData Err: ", pageService )
+            }
+        }
+
+    },
+    created(){
+        console.log("Ready!");
+        this.getHeroCarousel()
+        this.getHomePageData( 115 ) //<--- NEW
+    }
+}
+</script>
+```

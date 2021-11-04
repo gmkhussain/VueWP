@@ -39,15 +39,31 @@
             </div>
         </section>
 
+
+
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span v-html="pageData.acf.intro_text_1"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <img :src="pageData.acf.intro_image_1.url" alt="image" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </div>
 </template>
 
 <script>
 import cptService from '@/services/post/custom_post_types.js'
 import mediaService from '@/services/media/media.js'
+import pageService from '@/services/page/page.js'
 
 export default {
-    name: "Home_Page",
+    name: "Home_Page", // ID: 115
     data() {
         return {
             heroCarousel: [],
@@ -76,11 +92,26 @@ export default {
             catch (err) {
                 console.log("getHeroCarousel -> Err -> ", err )
             }
+        },
+
+        async getHomePageData( id ) {
+            console.log("Page Id:", id)
+            try {
+                let resp = await pageService.single( id )
+                
+                this.pageData = resp.data;
+                console.log("Home Page Data ->", this.pageData )
+
+            } catch ( err ) {
+                console.log("getPageData Err: ", pageService )
+            }
         }
+
     },
-    mounted(){
+    created(){
         console.log("Ready!");
         this.getHeroCarousel()
+        this.getHomePageData( 115 )
     }
 }
 </script>
@@ -89,5 +120,7 @@ export default {
 <style scoped>
 #heroArea {
     background: #e3d4d4;
+    height: 140px;
+    overflow: hidden;
 }
 </style>
