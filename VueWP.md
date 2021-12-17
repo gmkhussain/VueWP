@@ -31,6 +31,12 @@
 
 
 
+
+
+
+
+
+
 # Create VueApp
 
 - Install Vue CLI, Run ```npm i --g @vue/cli```
@@ -44,11 +50,46 @@ Once done installtion open app folder and run
 - ```npm install vue-router@next --save```
 
 - Create ```@/router/router.js```
-// router.js
+
+
+
+
+
+#### router.js
+```js
+import { createWebHistory, createRouter } from 'vue-router';
+import ContactPage from '../views/frontend/pages/ContactPage.vue'
+
+const routes = [
+    {
+        path: '/',
+        name: 'Home_Page',
+        component: () => import('@/views/frontend/pages/HomePage.vue')
+    },
+    {
+        path: '/contact',
+        name: 'Contact_Page',
+        component: ContactPage
+    }
+];
+
+const router = createRouter({
+	history: createWebHistory(),
+	routes,
+});
+
+export default router;
 ```
 
-// App.vue
-```js
+
+
+
+
+
+
+
+#### App.vue
+```html
 <template>
   <div>
       <router-link to="/">Home Static Link</router-link>
@@ -78,30 +119,20 @@ export default {
 ```
 
 
-// main.js
+
+
+
+
+
+
+#### main.js
 ```js
-import { createWebHistory, createRouter } from 'vue-router';
-import HomePage from '../views/frontend/pages/HomePage'
+import { createApp } from 'vue'
+import App from './App.vue'
 
-const routes = [
-    {
-        path: '/',
-        name: 'HomePage',
-        component: HomePage
-    },
-    {
-        path: '/contact',
-        name: 'ContactPage',
-        component: HomePage
-    }
-];
+import router from '@/router/router.js'
 
-const router = createRouter({
-    history: createWebHistory(),
-    routes
-});
-
-export default router;
+createApp(App).use(router).mount('#app')
 ```
 
 
@@ -114,7 +145,7 @@ export default router;
 ## Fetch All Post on Home Page
 ```npm i axios --save```
 
-// HomePage.vue
+#### HomePage.vue
 ```
 <template>
     <div>
@@ -190,7 +221,7 @@ export default {
 
 
 
-// AppLayoutDefault.vue
+#### AppLayoutDefault.vue
 ```js
 <template>
   <div id="body-wrapper">
@@ -221,7 +252,7 @@ export default{
 
 
 
-// AppLayout.vue
+#### AppLayout.vue
 ```js
 <template>
   <component :is="layout">
@@ -256,12 +287,12 @@ export default {
 
 
 
-// App.vue
-```js
+#### App.vue
+```html
 <template>
-<AppLayout>
-  <router-view />
-</AppLayout>
+    <AppLayout>
+        <router-view />
+    </AppLayout>
 </template>
 
 
@@ -303,7 +334,7 @@ export default {
 
 
 
-### Create custom
+## Create custom
 Custom layout fetch layout base on ```route.meta.layout``` param
 
 see above code:
@@ -341,9 +372,9 @@ export default{
 
 
 
-#### Add Layout and route in router file.
+## Add Layout and route in router file.
 
-// router/router.js
+#### router/router.js
 ```js
 import { createWebHistory, createRouter } from 'vue-router';
 // import HomePage from '../views/frontend/pages/HomePage.vue'
@@ -380,7 +411,7 @@ export default router;
 
 
 
-### Create Login Page
+## Create Login Page
 ```js
 <template>
     <section class="home">
@@ -465,9 +496,14 @@ define('JWT_AUTH_CORS_ENABLE', true);
 
 
 
-### VueApp
-// LoginPage.vue
-```js
+
+
+
+## VueApp
+
+
+#### LoginPage.vue
+```html
 <template>
     <section class="login">
         <div class="container">
@@ -509,7 +545,7 @@ export default {
 
 ### Login with form inputs
 
-```js
+```html
 <template>
     <section class="login">
         <div class="container">
@@ -607,7 +643,7 @@ export default {
 
 - Create ```configs/config.js```
 
-// config.js
+#### config.js
 ```js
 export const SITE_BASE_URL = `http://localhost/projects/_rd/VueWP/wordpress`;
 export const API_BASE_URL = `http://localhost/projects/_rd/VueWP/wordpress/wp-json`;
@@ -632,8 +668,8 @@ export const CONFIG = {
 - Check HomePage.vue OR LoginPage.vue
 
 
-// HomePage.vue
-```js
+#### HomePage.vue
+```html
 <template>
     <section class="home">
         <div class="container">
@@ -735,12 +771,14 @@ axios.get(`process.env.VUE_APP_API_BASE_URL${API_POSTS_URL}`)
 
 ## Services for APIs
 
-#### Create `services/services.js`
+- Create
+#### services/services.js
 ```js
 export * from './post/post.js';
 ```
 
-#### Create `services/posts/post.js`
+- Create
+#### services/posts/post.js
 ```js
 import { API_POSTS_URL, CONFIG } from "../../config/config";
 import axios from 'axios';
@@ -765,10 +803,10 @@ export default {
 
 
 
+- Modify
+#### HomePage.vue
 
-#### Modify HomePage.vue
-
-```js
+```html
 <template>
     <section class="home">
         <div class="container">
@@ -870,8 +908,8 @@ export default {
 
 - Add this line in ```.htaccess``` file ```SetEnv HTTPS on```
 
-
-- Create ```services/wooCommerce/products.js```
+- Create
+#### services/wooCommerce/products.js
 ```js
 import axios from "axios";
 
@@ -890,9 +928,10 @@ export default {
 
 
 
-- Create ```views/frontend/pages/products/ProductList/vue```
+- Create
+#### views/frontend/pages/products/ProductList/vue
 
-```js
+```html
 <template>
     <div>
         <h4>Product List</h4>
@@ -937,7 +976,6 @@ export default {
     }
 }
 </script>
-
 
 <style scoped>
 .product__img { height: 100px; border: 1px solid #dd99dd; overflow: hidden; }
@@ -999,8 +1037,8 @@ export default {
 
 ## Pagination
 
-// ProductList.vue
-```js
+#### ProductList.vue
+```html
 <template>
     <section class="products">
        <div class="container">
@@ -1168,7 +1206,7 @@ add_action( 'rest_api_init', function () {
 
 
 
-// services/siteSettings.js
+#### services/siteSettings.js
 ```js
 // import { API_POSTS_URL, CONFIG } from "../../config/config";
 import axios from 'axios';
@@ -1193,7 +1231,7 @@ export default {
 
 
 
-// views/frontend/layout/Header.vue
+#### views/frontend/layout/Header.vue
 ```js
 <template>
 //...
@@ -1274,7 +1312,7 @@ export default {
 ## Custom Post Type APIs
 
 - Add CPT in Wordpress
-// "functions/cpt_hero_carousel.php";
+#### "functions/cpt_hero_carousel.php";
 ```js
 <?php
 
@@ -1312,7 +1350,8 @@ register_taxonomy('my_slider_categories', 'hero_slider', $categories_labels);
 
 
 - Add API 
-// "functions/api_cpt_hero_carousel.php";
+#### functions/api_cpt_hero_carousel.php
+
 ```js
 <?php 
 
@@ -1336,7 +1375,7 @@ function hero_slider_cpt() {
 
 #### Fetch Custom Post Type in Vue
 
-// services/post/custom_post_types.js
+#### services/post/custom_post_types.js
 ```js
 import { CONFIG } from "../../config/config";
 import axios from 'axios';
@@ -1364,8 +1403,8 @@ export default {
 ```
 
 
-// HomePage.vue
-```js
+#### HomePage.vue
+```html
 <template>
     <div>        
         <section class="hero-area" id="heroArea">
@@ -1453,7 +1492,7 @@ export default {
 ### Single Media Service and Template
 
  
-// media.js
+#### media.js
 ```js
 import axios from 'axios';
 
@@ -1470,15 +1509,13 @@ export default {
         return axios.get( process.env.VUE_APP_API_BASE_URL + API_MEDIA_URL + _imageId )
     }
 }
-
 ```
 
 
 
 
 
-
-// HomePage.vue
+#### HomePage.vue
 ```js
 <script>
 import cptService from '@/services/post/custom_post_types.js'
@@ -1541,11 +1578,11 @@ export default {
 
 
 ### Carosuel 
-// HomePage.vue
-```js
+
+#### HomePage.vue
+```html
 <template>
     <div>
-        
         <section class="hero-area" id="heroArea">
             <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
@@ -1643,7 +1680,7 @@ export default {
 
 
 
-### Advanced Custom Fields
+## Advanced Custom Fields
 - Install ```Advanced Custom Fields``` plugin on wordpress
 - Add New Field Group
 - Select ```location```
@@ -1656,9 +1693,13 @@ export default {
 - Find ```acf```
 
 
-#### Add Page Services
 
-// services/page/page.js
+
+
+
+## Add Page Services
+
+#### services/page/page.js
 ```js
 // import { API_POSTS_URL, CONFIG } from "../../config/config";
 import axios from 'axios';
@@ -1677,8 +1718,8 @@ export default {
 ```
 
 
-// HomePage.vue
-```js
+#### HomePage.vue
+```html
 <template>
     <div>
         
