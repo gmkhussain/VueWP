@@ -24,4 +24,7 @@ export default {
 
 <style>
 /* No Style */
+html {
+  filter: invert(1);
+}
 </style>

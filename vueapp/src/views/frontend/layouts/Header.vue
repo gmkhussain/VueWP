@@ -28,10 +28,12 @@
                         </li>
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
+                            UIs
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li>
+                              <router-link class="nav-link" to="/ui">UI Table</router-link>
+                            </li>
                           </ul>
                         </li>
                         <li class="nav-item">

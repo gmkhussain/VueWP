@@ -1,7 +1,7 @@
 <template>
     <footer id="footer">
         <div class="container">
-            <h4>Footer</h4>
+            <span>Footer</span>
         </div>
     </footer>
 </template>

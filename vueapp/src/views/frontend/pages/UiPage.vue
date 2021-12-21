@@ -1,7 +1,13 @@
 <template>
     <section class="login">
         <div class="container">
-           <UiTable heading="head1" :mydata="mydata" :myreq="myreq" />
+
+          <!-- <UiTable heading="head1" :mydata="mydata" :myreq="myreq" /> -->
+          <!-- Required Fields from data() -->
+
+          <UiTable heading="head1" :mydata="mydata" :myreq='["name", "city"]' />
+          <!-- Required Fields Inline -->
+          
         </div>
     </section>
 </template>
