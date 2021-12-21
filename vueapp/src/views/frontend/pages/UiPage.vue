@@ -5,9 +5,9 @@
           <!-- <UiTable heading="head1" :mydata="mydata" :myreq="myreq" /> -->
           <!-- Required Fields from data() -->
 
-          <UiTable heading="head1" :mydata="mydata" :myreq='["name", "city"]' />
+          <UiTable heading="head1" :mydata="mydata" :myreq='["name", "address"]' />
           <!-- Required Fields Inline -->
-          
+
         </div>
     </section>
 </template>
@@ -24,14 +24,20 @@ export default {
         return {
           mydata: [
             {
-                name: "Amoos",
+                name: "abc",
                 phone: "123",
-                city: "London"
+                address: {
+                  city: "London",
+                  zipcode: "10024"
+                }                
             },
             {
                 name: "Andy",
                 phone: "789",
-                city: "Paris"
+                address: {
+                  city: "Paris",
+                  zipcode: "10024"
+                }
             }
           ],
           myreq: ["name", "phone", "city"]

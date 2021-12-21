@@ -5,14 +5,17 @@
       
       <table class="table">
         <tbody>
-            <tr v-for="( data, index ) in mydata" :key="index">
+            <tr v-for="( data, name , index ) in mydata" :key="index">
               <!-- <td>{{data[req]}}</td> -->
               <!-- <td>{{data.phone}}</td> -->
+                
               <td v-for="( r, idx ) in myreq" :key="idx">
                 <!-- {{idx}}
                 {{r}} -->
-                {{data[r]}}
+                {{data[r]}}                
+
               </td>
+
             </tr>
         </tbody>
       </table>

@@ -5,7 +5,7 @@
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">
                       <span v-if="siteLogo">
-                        <img :src="siteLogo" alt="">
+                        <img :src="siteLogo" alt="" />
                       </span>
                       <span v-else>No Logo</span>
                     </a>
