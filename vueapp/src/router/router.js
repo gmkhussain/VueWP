@@ -33,6 +33,11 @@ const routes = [
         path: '/checkout',
         name: 'Checkout_Page',
         component: () => import('@/views/frontend/pages/products/Checkout.vue'),
+    },
+    {
+        path: '/ui',
+        name: 'Ui_Page',
+        component: () => import('@/views/frontend/pages/UiPage.vue'),
     }
 
 ];
