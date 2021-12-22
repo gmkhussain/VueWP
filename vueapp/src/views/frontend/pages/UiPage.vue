@@ -5,7 +5,7 @@
           <!-- <UiTable heading="head1" :mydata="mydata" :myreq="myreq" /> -->
           <!-- Required Fields from data() -->
 
-          <UiTable heading="head1" :mydata="mydata" :myreq='["name", "address"]' />
+          <UiTable heading="head1" :mydata="mydata" :myreq='["name", "phone", "address"]' />
           <!-- Required Fields Inline -->
 
         </div>
@@ -26,18 +26,30 @@ export default {
             {
                 name: "abc",
                 phone: "123",
-                address: {
-                  city: "London",
-                  zipcode: "10024"
-                }                
+                address: [
+                  {
+                    city: "London",
+                    zipcode: "10024"
+                  },
+                  {
+                    city: "New England",
+                    zipcode: "10084"
+                  }
+                ]         
             },
             {
                 name: "Andy",
                 phone: "789",
-                address: {
-                  city: "Paris",
-                  zipcode: "10024"
-                }
+                address: [
+                  {
+                    city: "Paris",
+                    zipcode: "10024"
+                  },
+                  {
+                    city: "Poland",
+                    zipcode: "10028"
+                  },
+                ]
             }
           ],
           myreq: ["name", "phone", "city"]
