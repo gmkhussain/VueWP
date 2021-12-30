@@ -13,3 +13,5 @@ include "functions/cpt_hero_carousel.php";
 include "functions/api_cpt_hero_carousel.php";
 
 include "functions/api_user_role.php";
+
+include "functions/api_all_users.php";
